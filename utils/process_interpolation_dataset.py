@@ -1,6 +1,7 @@
 import argparse
 import os
 import re
+from datetime import datetime
 
 def get_args():
     parser = argparse.ArgumentParser(description='TKG-VAE')
@@ -17,7 +18,7 @@ def create_ent_rel_to_idx():
     train_triples = []
     valid_triples = []
     test_triples = []
-    for data_split, triple_lst in zip(['train', 'valid', 'test'], [train_triples, valid_triples, test_triples]):
+    for data_split, triple_lst in zip(['train', 'test', 'test'], [train_triples, valid_triples, test_triples]):
         with open(os.path.join(input_dir, "{}.txt".format(data_split)), "r") as f:
             for line in f:
                 line_split = line.strip().split('\t')
@@ -28,7 +29,7 @@ def create_ent_rel_to_idx():
                 entities.append(tail)
                 relations.append(rel)
                 time = line_split[3]
-                time = int(re.sub(r'-', '', time))
+                time = int(re.sub(r'-', '', datetime.fromtimestamp(int(time)).strftime('%Y-%m-%d')))
                 times.append(time)
                 triple_lst.append((head, rel, tail, time))
 
